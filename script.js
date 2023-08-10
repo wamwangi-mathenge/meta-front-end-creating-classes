@@ -36,3 +36,20 @@ console.log(train4.toggleLights());
 console.log(train4.lightsStatus());
 console.log(train4.getSelf())
 console.log(train4.getPrototype())
+
+class HighSpeedTrain extends Train {
+    constructor(passengers, highSpeedOn, color, lightsOn) {
+        super(color, lightsOn);
+        this.passengers = passengers;
+        this.highSpeedOn = highSpeedOn;
+    }
+    toggleHighSpeed() {
+        this.highSpeedOn = !this.highSpeedOn;
+        console.log("High speed status:", this.highSpeedOn)
+    }
+    toggleLights() {
+        super.toggleLights();
+        super.lightsStatus();
+        console.log("Lights are 100% operational.")
+    }
+} 
