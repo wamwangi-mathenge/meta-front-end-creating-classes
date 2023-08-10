@@ -53,3 +53,14 @@ class HighSpeedTrain extends Train {
         console.log("Lights are 100% operational.")
     }
 } 
+
+var myFirstTrain = new Train('red', false);
+console.log(myFirstTrain);
+var mySecondTrain = new Train('blue', false);
+var myThirdTrain = new Train('blue', false);
+
+var train4 = new Train('red', false);
+console.log(train4.toggleLights());
+console.log(train4.lightsStatus());
+console.log(train4.getSelf());
+console.log(train4.getPrototype());
