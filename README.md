@@ -71,3 +71,206 @@ Just like any other variable, you can now console log the myFirstTrain object:
 ```
 console.log(myFirstTrain); // Train {color: 'red', lightsOn: false}
 ```
+
+However, this is not all that classes can offer.
+
+You can also add methods to classes and these methods will then be shared by all future instance objects of my Train class
+
+For example:
+
+```
+class Train {
+    constructor(color, lightsOn) {
+        this.color = color;
+        this.lightsOn = lightsOn;
+    }
+    toggleLights() {
+        this.lightsOn = !this.lightsOn;
+    }
+    lightsStatus() {
+        console.log('Lights on?', this.lightsOn);
+    }
+    getSelf() {
+        console.log(this);
+    }
+    getPrototype() {
+        var proto = Object.getPrototypeof(this);
+        console.log(proto);
+    }
+}
+```
+
+Now there are 4 methods on the Train class:
+
+toggleLights(), lightsStatus(), getSelf() and getPrototype().
+
+1. The toggleLights method uses the logical NOT operator (!). This operator will change the value stored in the lightsOn property of the future instance object of the Train class; hence the !this.lightsIn. And the =  operator to its left means that it will get assigned to this.lightsOn meaning that it will become the new value of the lightsOn property on that given instance object.
+2. The lightsStatus() method on the Train class just reports the current status of the lightsOn variable of a given instance.
+3. The getSelf() method prints out the properties on the object instance it is called on
+4. The getPrototype() console logs the prototype of the object instance of the Train class. The prototype holds all the properties shared by all the object instances of the Train class. To get the prototype, you'll be using JavaScript's built-in Object.getPrototypeOf() method, and passing it this object - meaning, the object instance inside of which this method is invoked.
+
+Now you can build a brand new train using updated Train class:
+
+```
+var train4 = new Train('red', false);
+```
+
+And now, you can run each of its methods =, one after the other, to confirm their behavior:
+
+```
+train4.toggleLights(); // undefined
+train4.lightsStatus(); Lights on? true
+train4.getSelf(); // Train {color: 'red', lightsOn: true}
+train4.getPrototype(); // {constructor: f, toggleLights: f, getSelf: f, getPrototype: f}
+```
+
+The result of calling toggleLights() is the change of true to false and vice-versa, for the lightsOn property.
+
+The result of calling lightsStatus() is the console logging of the value of the lightsOn property.
+
+The result of calling getSelf() is the console logging the entire object instance in which the getSelf() method is called. In this case, the returned object is the train4 object. Notice that this object gets returned only when the properties ("data") that was built using the constructor() function of the Train class. That's because all the methods on the Train class do not "live" on any of the instance objects of the Train class - instead, they live on the prototype.
+
+The result of calling the getPrototype() method is the console logging all the properties on the prototype. When the class syntax is used in JavaScript, this results in only shared methods being stored on the prototype, while the constructor() function sets up the mechanism for saving instance-specific values ("data") at the type of object instantiation.
+
+In conclusion, the class syntax in JavaScript allows us to clearly separate individual object's data-which exists on the object instance which itself - from the shared object;s functionality (methods), which exist on the prototype and are shared by all object instances.
+
+It is possible to implement polymorphism using classes in JavaScript, by inheriting from the base class and then overriding the inherited behavior. To understand how this works, it is best to use an example.
+
+In the code that follows, you will observe another class being coded, which is named HighSpeedTrain and inherits from the Train class.
+
+This makes the Train class a base class, or the super-class of the HighSpeedTrain class. Put differently, the HighSpeedTrain class becomes the sub-class of the Train class, because it inherits from it.
+
+To inherit from one class to a new sub-class, JavaScript provides the extends keyword, which works as follows:
+
+```
+class HighSpeedTrain extends Train {
+
+}
+```
+
+As in the example above, the sub-class syntax is consistent with how the base class is defined in JavaScript. The only addition here is the extends keyword, and the name of the class from which the sub-class inherits.
+
+Now you can describe how the HighSpeedTrain works. Again, you can start by defining its constructor function:
+
+```
+class HighSpeedTrain extends Train {
+    constructor(passengers, highSpeedOn, color, lightsOn) {
+        super(color, lightsOn);
+        this.passengers = passengers;
+        this.highSpeedOn = highSpeedOn;
+    }
+}
+```
+
+Notice the slight difference in syntax in the constructor of the HighSpeedtrain class, namely the use of the 'super' keyword.
+
+In JavaScript classes, super is used to specify what property gets inherited from the super-class in the sub-class.
+
+In this case, I choose to inherit both the properties from the Train super-class in the HighSpeedTrain sub-class.
+
+These properties are color and lightsOn.
+
+Next, you add the additional properties of the HighSpeedTrain class inside its constructor, namely, the passengers and highSpeedOn properties.
+
+Next, inside the constructor body, you use the super keyword and pass in the inherited color and lightsOn properties that come from the Train class. On subsequent lines you assign passengers to this.passengers, and highSpeedOn to this.highSpeedOn.
+
+Notice that in addition to the inherited properties, you also automatically inherit all the methods that exist on the Train prototype, namely, the toggleLights(), lightsStatus(), getSelf(), and getPrototype() methods.
+
+Now let's add another method that will be specific to the HighSpeedTrain class: the toggleHighSpeed() method.
+
+```
+class HighSpeedTrain extends Train {
+    constructor(passengers, highSpeedOn, color, lightsOn) {
+        super(color, lightsOn);
+        this.passengers = passengers;
+        this.highSpeedOn = highSpeedOn;
+    }
+    toggleHighSpeed() {
+        this.highSpeedOn = !this.highSpeedOn;
+        console.log("High speed status:", this.highSpeedOn)
+    }
+} 
+```
+
+Additionally, imagine you realized that you don't like how the toggleLights() method from the super-class works, and you want to implement it a bit differently in the sub-class. You can add it inside the HighSpeedTrain class. 
+
+```
+class HighSpeedTrain extends Train {
+    constructor(passengers, highSpeedOn, color, lightsOn) {
+        super(color, lightsOn);
+        this.passengers = passengers;
+        this.highSpeedOn = highSpeedOn;
+    }
+    toggleHighSpeed() {
+        this.highSpeedOn = !this.highSpeedOn;
+        console.log('High speed status:', this.highSpeedOn);
+    }
+    toggleLights() {
+        super.toggleLigths();
+        super.lightsStatus();
+        console.log('Lights are 100% operational.');
+    }
+}
+```
+
+So, how did you override the behavior of the original toggleLights() method?
+
+Well in the super-class, the toggleLights() method was defined as follows:
+
+```
+toggleLights() {
+    this.lightsOn = !this.lightsOn;
+}
+```
+
+You realized that the HighSpeedTrain method should reuse the existing behavior of the original toggleLights() method, and so you used the super.toggleLights() syntax to inherit the entire super-class' method.
+
+Next, you also inherit the behavior of the super-class' lightsStatus() method - because you realize that you want to have the updated status of the lightsOn property logged to the console, whenever you invoke the toggleLights() method in the sub-class.
+
+Finally, you also add the third line in the re-implemented toggleLights() method, namely:
+
+```
+console.log("Lights are 100% operational.")
+```
+
+You've added this third line to show that I can combine the "borrowed" method code from the super-class with your own custom code in the sub-class.
+
+Now you're ready to build some train objects.
+
+```
+var train5 = new Train('blue', false);
+var highSpeed1 = new HighSpeedTrain (200, false, "green", false);
+```
+
+You've built the train5 object of the Train class, and set its color to "blue" and its lightsOn to false.
+
+Next, you've built the highSpeed1 object to the HighSpeedTrain class, setting passengers to 200, highSpeedOn to false, color to "green", and lightsOn to false.
+
+Now you can test the behavior of train5, by calling, for example, the toggleLights() method, then the lightsStatus() method:
+
+```
+train5.toggleLights(); // undefined
+train5.lightsStatus(); // Lights on? true
+```
+
+Notice how the toggleLights() method behaves differently on the HighSpeedTrain class than it does on the Train class.
+
+Additionally, it helps to visualize what is happening by getting the prototype of both the train5 and the highSpeed1 trains:
+
+```
+train5.getPrototype(); // {constructor: ƒ, toggleLights: ƒ, lightsStatus: ƒ, getSelf: ƒ, getPrototype: ƒ}
+highSpeed1.getPrototype(); // Train {constructor: ƒ, toggleHighSpeed: ƒ, toggleLights: ƒ}
+```
+
+The returned values in this case might initially seem a bit tricky to comprehend, but actually, it is quite simple: 
+
+1. The prototype object of the train5 object was created when you defined the class Train. You can access the prototype using Train.prototype syntax and get the prototype object back. 
+
+2. The prototype object of the highSpeed1 object is this object: {constructor: ƒ, toggleHighSpeed: ƒ, toggleLights: ƒ}. In turn this object has its own prototype, which can be found using the following syntax: HighSpeedTrain.prototype.__proto__. Running this code returns: {constructor: ƒ, toggleLights: ƒ, lightsStatus: ƒ, getSelf: ƒ, getPrototype: ƒ}.
+
+Prototypes seem easy to grasp at a certain level, but it's easy to get lost in the complexity. This is one of the reasons why class syntax in JavaScript improves your developer experience, by making it easier to reason about the relationships between classes. However, as you improve your skills, you should always strive to understand your tools better, and this includes prototypes. After all, JavaScript is just a tool, and you've now "peeked behind the curtain".
+
+In this reading, you've learned the very essence of how OOP with classes works in JavaScript. However, this is not all. 
+
+In the lesson on designing an object-oriented program, you'll learn some more useful concepts. These mostly have to do with coding your classes so that it's even easier to create object instances of those classes in JavaScript.
+
